@@ -74,3 +74,12 @@ class UpdateURL(Resource):
                 'updatedAt': url_entry.updated_at.isoformat()
             }, 200
         return {'message': 'URL not found'}, 404
+    
+class DeleteURL(Resource):
+    def delete(self, short_code):
+        url_entry = ShortURL.query.filter_by(short_code=short_code).first()
+        if url_entry:
+            db.session.delete(url_entry)
+            db.session.commit()
+            return '', 204
+        return {'message': 'URL not found'}, 404
