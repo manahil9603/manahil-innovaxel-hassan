@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from models import ShortURL, db
 from datetime import datetime
+from urllib.parse import urlparse
 import random
 import string
 
@@ -10,27 +11,36 @@ def generate_short_code(length=6):
     return ''.join(random.choice(characters) for _ in range(length))
 
 
+
+
 class ShortenURL(Resource):
     def post(self):
-        
         parser = reqparse.RequestParser()
         parser.add_argument('url', type=str, required=True, help='URL is required')
         args = parser.parse_args()
 
-        
+        # Validate the URL
         original_url = args['url']
         if not original_url:
             return {'message': 'URL is required'}, 400
 
-        
+        # Check if the URL is valid
+        try:
+            result = urlparse(original_url)
+            if not all([result.scheme, result.netloc]):  # Ensure scheme (e.g., http) and domain are present
+                return {'message': 'Invalid URL'}, 400
+        except:
+            return {'message': 'Invalid URL'}, 400
+
+        # Generate a short code
         short_code = generate_short_code()
 
-        
+        # Save the URL and short code to the database
         new_url = ShortURL(original_url=original_url, short_code=short_code)
         db.session.add(new_url)
         db.session.commit()
 
-        
+        # Return the response
         return {
             'id': new_url.id,
             'url': new_url.original_url,
@@ -39,6 +49,7 @@ class ShortenURL(Resource):
             'updated_at': new_url.updated_at.isoformat()
         }, 201
     
+
 class RetrieveURL(Resource):
     def get(self, short_code):
         url_entry = ShortURL.query.filter_by(short_code=short_code).first()
