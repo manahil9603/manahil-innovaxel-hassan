@@ -1,53 +1,35 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background-color: #f8f9fa;
 }
 
 .container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    text-align: center;
+    max-width: 800px;
 }
 
-h1 {
-    margin-bottom: 20px;
-}
-
-.form-container {
-    margin-bottom: 20px;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
+.card {
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    border-radius: 10px;
 }
 
-button:hover {
-    background-color: #0056b3;
+.card-title {
+    color: #333;
 }
 
-p, pre {
-    margin-top: 10px;
+.btn {
+    font-weight: 500;
+}
+
+pre {
+    white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+.display-4 {
+    font-size: 3.5rem;
+    color: #007bff;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #007bff, #00ff88); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
 }
