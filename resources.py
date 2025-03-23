@@ -83,3 +83,16 @@ class DeleteURL(Resource):
             db.session.commit()
             return '', 204
         return {'message': 'URL not found'}, 404
+class URLStats(Resource):
+    def get(self, short_code):
+        url_entry = ShortURL.query.filter_by(short_code=short_code).first()
+        if url_entry:
+            return {
+                'id': url_entry.id,
+                'url': url_entry.original_url,
+                'shortCode': url_entry.short_code,
+                'createdAt': url_entry.created_at.isoformat(),
+                'updatedAt': url_entry.updated_at.isoformat(),
+                'accessCount': url_entry.access_count
+            }, 200
+        return {'message': 'URL not found'}, 404
