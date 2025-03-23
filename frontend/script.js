@@ -52,6 +52,63 @@ async function retrieveOriginalUrl() {
 }
 
 
+
+async function updateUrl() {
+    const shortCode = document.getElementById('updateShortCode').value;
+    const updatedUrl = document.getElementById('updatedUrl').value;
+
+    if (!shortCode || !updatedUrl) {
+        alert('Please enter both the short code and the updated URL');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/shorten/${shortCode}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: updatedUrl }),
+        });
+
+        const data = await response.json();
+        if (response.status === 200) {
+            document.getElementById('updateUrlResult').innerText = `URL updated successfully: ${data.url}`;
+        } else {
+            document.getElementById('updateUrlResult').innerText = 'Error: ' + (data.message || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('updateUrlResult').innerText = 'An error occurred: ' + error.message;
+    }
+}
+
+
+async function deleteUrl() {
+    const shortCode = document.getElementById('deleteShortCode').value;
+    if (!shortCode) {
+        alert('Please enter a short code');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/shorten/${shortCode}`, {
+            method: 'DELETE',
+        });
+
+        if (response.status === 204) {
+            document.getElementById('deleteUrlResult').innerText = 'URL deleted successfully';
+        } else {
+            const data = await response.json();
+            document.getElementById('deleteUrlResult').innerText = 'Error: ' + (data.message || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('deleteUrlResult').innerText = 'An error occurred: ' + error.message;
+    }
+}
+
+
 async function getUrlStats() {
     const shortCode = document.getElementById('statsShortCode').value;
     if (!shortCode) {
