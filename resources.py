@@ -37,3 +37,18 @@ class ShortenURL(Resource):
             'created_at': new_url.created_at.isoformat(),
             'updated_at': new_url.updated_at.isoformat()
         }, 201
+    
+class RetrieveURL(Resource):
+    def get(self, short_code):
+        url_entry = ShortURL.query.filter_by(short_code=short_code).first()
+        if url_entry:
+            url_entry.access_count += 1
+            db.session.commit()
+            return {
+                'id': url_entry.id,
+                'url': url_entry.original_url,
+                'shortCode': url_entry.short_code,
+                'createdAt': url_entry.created_at.isoformat(),
+                'updatedAt': url_entry.updated_at.isoformat()
+            }, 200
+        return {'message': 'URL not found'}, 404
