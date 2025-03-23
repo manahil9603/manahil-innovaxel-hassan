@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
 from models import db
-from resources import ShortenURL,RetrieveURL
+from resources import ShortenURL,RetrieveURL,UpdateURL
 
 app = Flask(__name__)
 CORS(app) 
@@ -21,7 +21,7 @@ with app.app_context():
 
 api.add_resource(ShortenURL, '/shorten')
 api.add_resource(RetrieveURL, '/shorten/<string:short_code>')
-
+api.add_resource(UpdateURL, '/shorten/<string:short_code>')
 
 if __name__ == '__main__':
     app.run(debug=True)

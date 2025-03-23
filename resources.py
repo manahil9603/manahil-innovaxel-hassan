@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from models import ShortURL, db
+from datetime import datetime
 import random
 import string
 
@@ -43,6 +44,27 @@ class RetrieveURL(Resource):
         url_entry = ShortURL.query.filter_by(short_code=short_code).first()
         if url_entry:
             url_entry.access_count += 1
+            db.session.commit()
+            return {
+                'id': url_entry.id,
+                'url': url_entry.original_url,
+                'shortCode': url_entry.short_code,
+                'createdAt': url_entry.created_at.isoformat(),
+                'updatedAt': url_entry.updated_at.isoformat()
+            }, 200
+        return {'message': 'URL not found'}, 404
+    
+
+class UpdateURL(Resource):
+    def put(self, short_code):
+        parser = reqparse.RequestParser()
+        parser.add_argument('url', type=str, required=True, help='Updated URL is required')
+        args = parser.parse_args()
+
+        url_entry = ShortURL.query.filter_by(short_code=short_code).first()
+        if url_entry:
+            url_entry.original_url = args['url']
+            url_entry.updated_at = datetime.utcnow()
             db.session.commit()
             return {
                 'id': url_entry.id,
